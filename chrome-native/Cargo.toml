@@ -1,0 +1,26 @@
+[package]
+name = "chrome-native"
+version = "1.0.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+serde = { version = "1.0.143", optional = true }
+serde_json = { version = "1.0.83", optional = true }
+macros = { path = "../macros", optional = true }
+thiserror = "1.0.32"
+
+[features]
+default = [
+    "serde"
+]
+
+macros = [
+    "dep:macros"
+]
+
+serde = [
+    "dep:serde",
+    "dep:serde_json"
+]

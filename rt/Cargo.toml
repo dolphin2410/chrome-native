@@ -1,0 +1,15 @@
+[package]
+name = "rt"
+version = "1.0.0"
+edition = "2021"
+authors = ["dolphin2410"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+bytes = "1.2.1"
+serde = { version = "1.0.143", features = ["derive"] }
+serde_json = "1.0.83"
+chrome-native = { path = "../chrome-native" }
+libloading = "0.7.3"
+clap = { version = "3.2.17", features = ["derive"] }

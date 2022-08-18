@@ -1,0 +1,9 @@
+{
+    "name": "me.dolphin2410.chrome_native",
+    "description": "Native Application",
+    "path": "bin/chrome-native.exe",
+    "type": "stdio",
+    "allowed_origins": [
+      "chrome-extension://kongcmgoaogdgmmafdgkfjlcbkgfffko/"
+    ]
+  }

@@ -1,0 +1,13 @@
+{
+    "name": "Chrome_Native",
+    "description": "Build an Extension!",
+    "version": "1.0",
+    "manifest_version": 3,
+    "background": {
+      "service_worker": "background.js"
+    },
+    "permissions": ["scripting", "nativeMessaging"],
+    "action": {
+      "default_popup": "popup.html"
+    }
+  }

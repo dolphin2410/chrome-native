@@ -1,0 +1,12 @@
+[package]
+name = "example"
+version = "1.0.0"
+edition = "2021"
+
+[lib]
+name = "example"
+crate-type = ["cdylib"]
+
+[dependencies]
+chrome-native = { path = "../chrome-native", features = ["macros"] }
+serde = { version = "1.0.143", features = ["derive"] }
