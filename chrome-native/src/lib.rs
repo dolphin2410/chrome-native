@@ -24,6 +24,6 @@ where
 #[cfg(feature = "macros")]
 #[allow(unused_imports)]
 #[macro_use]
-extern crate macros;
+extern crate chrome_native_macros;
 #[cfg(feature = "macros")]
-pub use macros::*;
+pub use chrome_native_macros::*;

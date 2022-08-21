@@ -1,7 +1,7 @@
 [workspace]
 members = [
-    "rt",
+    "chrome-native-rt",
     "chrome-native",
-    "macros",
+    "chrome-native-macros",
     "example"
 ]

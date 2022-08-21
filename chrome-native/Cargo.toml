@@ -8,7 +8,7 @@ edition = "2021"
 [dependencies]
 serde = { version = "1.0.143", optional = true }
 serde_json = { version = "1.0.83", optional = true }
-macros = { path = "../macros", optional = true }
+chrome-native-macros = { path = "../chrome-native-macros", version="1.0.0", optional = true }
 thiserror = "1.0.32"
 
 [features]
@@ -17,7 +17,7 @@ default = [
 ]
 
 macros = [
-    "dep:macros"
+    "dep:chrome-native-macros"
 ]
 
 serde = [
