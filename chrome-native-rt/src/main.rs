@@ -143,54 +143,57 @@ fn main() {
     let mut stdin = BufReader::new(std::io::stdin().lock());
     let mut stdout = BufWriter::new(std::io::stdout().lock());
 
-    let mut read_buf = BytesMut::with_capacity(STDIO_MAX_BUFFER_SIZE);
-    let mut write_buf = BytesMut::with_capacity(STDIO_MAX_BUFFER_SIZE);
-    read_buf.resize(STDIO_MAX_BUFFER_SIZE, 0);
+    loop {
+        let mut read_buf = BytesMut::with_capacity(STDIO_MAX_BUFFER_SIZE);
+        let mut write_buf = BytesMut::with_capacity(STDIO_MAX_BUFFER_SIZE);
+        read_buf.resize(STDIO_MAX_BUFFER_SIZE, 0);
 
-    let read_bytes = stdin.read(&mut read_buf[..]).unwrap();
-    let mut iter = plugins.iter();
-    let mut result: Result<String, Box<dyn std::error::Error>> =
-        Err("Couldn't find the right handler".into());
-    while let Some((_, plugin)) = iter.next() {
-        result =
-            plugin.handle_command(String::from_utf8(read_buf[4..read_bytes].to_vec()).unwrap());
-        if let Err(ref e) = result {
-            if !e.is::<ChromeNativeErrors>() {
-                break;
+        let read_bytes = stdin.read(&mut read_buf[..]).unwrap();
+        let mut iter = plugins.iter();
+        let mut result: Result<String, Box<dyn std::error::Error>> =
+            Err("Couldn't find the right handler".into());
+        while let Some((_, plugin)) = iter.next() {
+            result =
+                plugin.handle_command(String::from_utf8(read_buf[4..read_bytes].to_vec()).unwrap());
+            if let Err(ref e) = result {
+                if !e.is::<ChromeNativeErrors>() {
+                    break;
+                }
             }
         }
+        let (code, message) = if result.is_ok() {
+            (ERRORCODE_OK, result.unwrap())
+        } else {
+            (ERRORCODE_FAIL, result.err().unwrap().to_string())
+        };
+
+        let result = json!({
+            "result": {
+                "code": code,
+                "message": message
+            }
+        });
+        let response_str = result.to_string();
+        let response_bytes = response_str.as_bytes();
+
+        write_buf.put_u32_le(response_bytes.len() as u32);
+        write_buf.put(response_bytes);
+
+        stdout.write_all(&write_buf[..]).unwrap();
+        stdout.flush().unwrap();
+
+        write_buf.clear();
+        read_buf.clear();
     }
-    let (code, message) = if result.is_ok() {
-        (ERRORCODE_OK, result.unwrap())
-    } else {
-        (ERRORCODE_FAIL, result.err().unwrap().to_string())
-    };
-
-    let result = json!({
-        "result": {
-            "code": code,
-            "message": message
-        }
-    });
-    let response_str = result.to_string();
-    let response_bytes = response_str.as_bytes();
-
-    write_buf.put_u32_le(response_bytes.len() as u32);
-    write_buf.put(response_bytes);
-
-    stdout.write_all(&write_buf[..]).unwrap();
-    stdout.flush().unwrap();
 
     // Dereference plugin and library in order
-    for (lib, plugin) in plugins {
-        {
-            plugin
-        };
-        {
-            lib
-        };
-    }
+    // for (lib, plugin) in plugins {
+    //     {
+    //         plugin
+    //     };
+    //     {
+    //         lib
+    //     };
+    // }
 
-    write_buf.clear();
-    read_buf.clear();
 }
